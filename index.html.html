@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bet Builder — ENG vs NZ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root{--bg:#0a0e14;--bg2:#111822;--card:#161f2c;--card-h:#1c2736;--elev:#1e2a3a;--green:#00e87b;--green-g:rgba(0,232,123,0.15);--amber:#ffb800;--red:#ff4757;--blue:#3b82f6;--t1:#e8edf4;--t2:#8899aa;--t3:#556677;--brd:#1e2a3a;--sans:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--bg);color:var(--t1);min-height:100vh}
+.app{display:grid;grid-template-columns:1fr 340px;min-height:100vh;max-width:1440px;margin:0 auto}
+.mkts{padding:16px 24px;overflow-y:auto;max-height:100vh;border-right:1px solid var(--brd)}
+.mhdr{background:linear-gradient(135deg,var(--card),var(--elev));border-radius:12px;padding:16px 20px;margin-bottom:16px;border:1px solid var(--brd);position:relative;overflow:hidden}
+.mhdr::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--blue))}
+.badge{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--green);background:var(--green-g);padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.teams{font-size:18px;font-weight:700}.vs{color:var(--t3);font-weight:400;margin:0 6px;font-size:13px}
+.info{font-size:11px;color:var(--t2);margin-top:3px}
+.sec{margin-bottom:3px}
+.sh{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--card);border:1px solid var(--brd);border-radius:7px;cursor:pointer;user-select:none;transition:all .12s}
+.sh:hover{background:var(--card-h)}.sh.blk{opacity:.35;cursor:not-allowed}
+.sh .nm{font-size:12px;font-weight:600;display:flex;align-items:center;gap:7px}
+.sh .ic{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.cv{font-size:10px;color:var(--t3);transition:transform .2s}.sh.op .cv{transform:rotate(180deg)}
+.sb{display:none;padding:4px 0 4px 10px}.sb.op{display:block}
+.sl{padding:4px 8px;font-size:10px;font-weight:600;color:var(--t3);margin-top:4px}
+.m{padding:6px 10px;border-radius:5px;margin:1px 0;cursor:pointer;transition:all .1s;display:flex;align-items:center;justify-content:space-between;font-size:12px}
+.m:hover{background:var(--card-h)}.m.blk{opacity:.25;cursor:not-allowed;text-decoration:line-through}
+.m.sel{background:var(--green-g);outline:1px solid rgba(0,232,123,.3)}
+.od{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--green);background:var(--green-g);padding:2px 7px;border-radius:3px;min-width:40px;text-align:center}
+.m.sel .od{background:var(--green);color:var(--bg)}
+.ct{font-family:var(--mono);font-size:8px;color:var(--red);background:rgba(255,71,87,.1);padding:1px 5px;border-radius:3px}
+.pb{width:40px;height:2px;background:var(--elev);border-radius:1px;overflow:hidden;margin:0 6px;flex-shrink:0}
+.pb .f{height:100%;background:var(--green);border-radius:1px}
+.slip{background:var(--bg2);display:flex;flex-direction:column;max-height:100vh;position:sticky;top:0}
+.slip-h{padding:14px 18px;background:var(--card);border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between}
+.slip-h h2{font-size:14px;font-weight:700;display:flex;align-items:center;gap:7px}
+.cn{background:var(--green);color:var(--bg);font-size:10px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.cl{font-size:10px;color:var(--t3);cursor:pointer;background:none;border:none;font-family:var(--sans)}.cl:hover{color:var(--red)}
+.slip-b{flex:1;overflow-y:auto;padding:12px}
+.si{background:var(--card);border:1px solid var(--brd);border-radius:7px;padding:10px;margin-bottom:5px;position:relative;animation:sI .18s ease-out}
+@keyframes sI{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:translateX(0)}}
+.si .rm{position:absolute;top:7px;right:7px;width:16px;height:16px;border-radius:50%;background:var(--elev);border:none;color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px}
+.si .rm:hover{background:var(--red);color:#fff}
+.si .mn{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:1px}
+.si .sn{font-size:12px;font-weight:600;margin-bottom:1px}.si .so{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--green)}
+.wn{background:rgba(255,71,87,.08);border:1px solid rgba(255,71,87,.2);border-radius:7px;padding:7px 10px;margin:0 12px 6px;font-size:10px;color:var(--red)}
+.slip-f{padding:14px 18px;background:var(--card);border-top:1px solid var(--brd)}
+.sr{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:11px}
+.sr .l{color:var(--t2)}.sr .v{font-family:var(--mono);font-weight:600}
+.sr.tot{border-top:1px solid var(--brd);padding-top:8px;margin-top:4px}.sr.tot .v{font-size:15px;color:var(--green)}
+.sinp{font-family:var(--mono);font-size:13px;font-weight:600;background:var(--elev);border:1px solid var(--brd);border-radius:5px;color:var(--t1);padding:6px 8px;width:90px;text-align:right;outline:none}
+.sinp:focus{border-color:var(--green)}
+.pbtn{width:100%;padding:10px;background:var(--green);color:var(--bg);border:none;border-radius:7px;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;margin-top:8px}
+.pbtn:disabled{opacity:.35;cursor:not-allowed}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--elev);border:1px solid var(--brd);color:var(--t1);padding:8px 18px;border-radius:7px;font-size:11px;z-index:200;transition:transform .25s}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.empty{text-align:center;padding:40px 14px;color:var(--t3)}.empty p{font-size:12px;line-height:1.5}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--brd);border-radius:2px}
+@media(max-width:900px){.app{grid-template-columns:1fr}.slip{position:fixed;bottom:0;left:0;right:0;max-height:45vh;z-index:50;border-top:2px solid var(--green);border-radius:14px 14px 0 0}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="mkts"><div class="mhdr"><div class="badge">T20I · ICC T20 World Cup</div><div class="teams">England <span class="vs">vs</span> New Zealand</div><div class="info">26 Feb 2026 · The Oval, London</div></div><div id="mc"></div></div>
+<div class="slip"><div class="slip-h"><h2>Bet Builder <span class="cn" id="cn">0</span></h2><button class="cl" onclick="clr()">Clear all</button></div><div class="slip-b" id="sb"></div><div id="wa"></div>
+<div class="slip-f"><div class="sr"><span class="l">Stake</span><input type="text" class="sinp" id="si" value="10.00" oninput="uR()"></div><div class="sr"><span class="l">Legs</span><span class="v" id="lc">0</span></div><div class="sr"><span class="l">Combined Odds</span><span class="v" id="co" style="color:var(--amber)">—</span></div><div class="sr tot"><span class="l">Returns</span><span class="v" id="rt">£0.00</span></div><button class="pbtn" id="pb" disabled>Add selections</button></div></div></div>
+<div class="toast" id="ts"></div>
+<script>
+// 7-TIER MARGINS: competitive short, BRUTAL long
+// <1.50=5%, 1.50-2.00=10%, 2.00-3.00=18%, 3.00-5.00=30%, 5.00-10.00=50%, 10.00-20.00=70%, 20+=90%
+const MARGINS=[5,10,18,30,50,70,90],BSIG=0.83,BMULT=1.0;
+const CF={home_top_bat:['home_top_bat','match_top_bat','team_top_bat','top_bat_total'],away_top_bat:['away_top_bat','match_top_bat','team_top_bat','top_bat_total'],home_top_bowl:['home_top_bowl','match_top_bowl'],away_top_bowl:['away_top_bowl','match_top_bowl'],toss:['toss_winner','toss_match','make_toss_count'],match_result:['match_result','draw_no_bet','wincasts','toss_match','tie'],sixes:['match_sixes','most_sixes'],fours:['match_fours','most_fours'],home_inn:['home_inn','home_pp'],away_inn:['away_inn','away_pp'],wicket_method:['wicket_method'],fall_wkt:['fall_wkt','opening_partnership'],milestone_100:['milestone_100']};
+function gf(id){const g=[];for(const[k,v]of Object.entries(CF))if(v.includes(id))g.push(k);const m=id.match(/^(bat|bowl)_([ha])_(\d+)$/);if(m)g.push(`p_${m[1]}_${m[2]}_${m[3]}`);return g}
+function cf(a,b){if(a===b)return!0;const ga=gf(a),gb=gf(b);return ga.some(g=>gb.includes(g))}
+let sel=[],opn=new Set(),blk=new Set();
+function gB(){const b=new Set(),si=sel.map(s=>s.mid);for(const c of DATA)for(const m of c.markets)for(const it of(m.items||[]))if(!si.includes(it.id)&&si.some(s=>cf(s,it.id)))b.add(it.id);return b}
+
+// Math
+function nC(x,m,s){const z=(x-m)/s,t=1/(1+.2316419*Math.abs(z));const p=.3989423*Math.exp(-z*z/2)*(t*(.3193815+t*(-.3565638+t*(1.781478+t*(-1.821256+t*1.3302744)))));return z>0?1-p:p}
+function lC(x,mu,sig){return x<=0?0:nC((Math.log(x)-mu)/sig,0,1)}
+function pC(k,l){let s=0;for(let i=0;i<=k;i++){let lp=-l;for(let j=1;j<=i;j++)lp+=Math.log(l/j);s+=Math.exp(lp)}return s}
+function tO(p,M){if(p<=.003||p>=.995)return null;const f=1/p;let m;if(f<1.5)m=M[0];else if(f<2)m=M[1];else if(f<3)m=M[2];else if(f<5)m=M[3];else if(f<10)m=M[4];else if(f<20)m=M[5];else m=M[6];return Math.round(f*(1+m/100)*100)/100}
+
+// Build data
+const hp=[{n:'J. Buttler',tb:4.5,r:23.5,tbw:null,wo:null,pm:5},{n:'P. Salt',tb:5,r:24.5,tbw:null,wo:null,pm:8},{n:'H. Brook',tb:5.5,r:22.5,tbw:null,wo:null,pm:7},{n:'J. Bethell',tb:6,r:16.5,tbw:null,wo:null,pm:9},{n:'T. Banton',tb:8,r:14.5,tbw:null,wo:null,pm:12},{n:'L. Livingstone',tb:7,r:18.5,tbw:null,wo:null,pm:10},{n:'S. Curran',tb:10,r:16.5,tbw:5,wo:2.62,pm:9},{n:'R. Ahmed',tb:null,r:12.5,tbw:4.5,wo:2.25,pm:11},{n:'J. Archer',tb:null,r:null,tbw:3.75,wo:2.25,pm:6},{n:'M. Wood',tb:null,r:null,tbw:4.5,wo:3,pm:12},{n:'J. Overton',tb:null,r:null,tbw:4,wo:3,pm:15}];
+const ap=[{n:'M. Chapman',tb:4.5,r:15.5,tbw:null,wo:null,pm:7},{n:'D. Conway',tb:5,r:25.5,tbw:null,wo:null,pm:9},{n:'G. Phillips',tb:5.5,r:23.5,tbw:null,wo:null,pm:8.5},{n:'R. Ravindra',tb:5.5,r:20.5,tbw:null,wo:null,pm:8},{n:'D. Mitchell',tb:8,r:20.5,tbw:12,wo:3.4,pm:11},{n:'J. Neesham',tb:9,r:18.5,tbw:7,wo:2.62,pm:10},{n:'F. Allen',tb:10,r:16.5,tbw:null,wo:null,pm:14},{n:'T. Seifert',tb:6,r:22.5,tbw:null,wo:null,pm:10},{n:'T. Boult',tb:null,r:null,tbw:3.5,wo:2.5,pm:7},{n:'L. Ferguson',tb:null,r:null,tbw:4,wo:2.5,pm:8.5},{n:'M. Santner',tb:null,r:null,tbw:4.5,wo:3.4,pm:9}];
+
+function mkCats(){const C=[];
+C.push({n:'Match Outcome',i:'🏆',bg:'rgba(255,184,0,.15)',markets:[
+{l:'Match Result',items:[{id:'match_result',n:'England',o:1.76},{id:'match_result',n:'New Zealand',o:1.95}]},
+{l:'Draw No Bet',items:[{id:'draw_no_bet',n:'England',o:1.65},{id:'draw_no_bet',n:'New Zealand',o:2.10}]},
+{l:'Wincasts',items:[{id:'wincasts',n:'Eng bat 1st & win',o:3.40},{id:'wincasts',n:'Eng bat 2nd & win',o:3.60},{id:'wincasts',n:'NZ bat 1st & win',o:4.20},{id:'wincasts',n:'NZ bat 2nd & win',o:3.80}]},
+{l:'Tie?',items:[{id:'tie',n:'Yes',o:21},{id:'tie',n:'No',o:1.01}]}]});
+
+C.push({n:'Toss',i:'🪙',bg:'rgba(59,130,246,.15)',markets:[
+{l:'Toss Winner',items:[{id:'toss_winner',n:'England',o:1.86},{id:'toss_winner',n:'New Zealand',o:1.86}]},
+{l:'Make Toss Count',items:[{id:'make_toss_count',n:'Bat 1st wins',o:1.90},{id:'make_toss_count',n:'Bat 2nd wins',o:1.82}]},
+{l:'Win Toss & Match',items:[{id:'toss_match',n:'England',o:3.27},{id:'toss_match',n:'New Zealand',o:3.63}]}]});
+
+C.push({n:'Team Markets',i:'📊',bg:'rgba(34,211,238,.15)',markets:[
+{l:'Most Sixes',items:[{id:'most_sixes',n:'England',o:1.85},{id:'most_sixes',n:'New Zealand',o:1.88}]},
+{l:'Most Fours',items:[{id:'most_fours',n:'England',o:1.83},{id:'most_fours',n:'New Zealand',o:1.90}]},
+{l:'Highest 1st Over',items:[{id:'h1o',n:'England',o:1.90},{id:'h1o',n:'New Zealand',o:1.83}]},
+{l:'Team of Top Batsman',items:[{id:'team_top_bat',n:'England',o:1.75},{id:'team_top_bat',n:'New Zealand',o:1.95}]},
+{l:'Any Player 100',items:[{id:'milestone_100',n:'No',o:1.05},{id:'milestone_100',n:'Yes',o:8.00}]}]});
+
+C.push({n:'England Top Batsman',i:'🏏',bg:'rgba(0,232,123,.15)',markets:[{l:'Eng Top Bat',items:hp.filter(p=>p.tb).map(p=>({id:'home_top_bat',n:p.n,o:p.tb}))}]});
+C.push({n:'NZ Top Batsman',i:'🏏',bg:'rgba(0,232,123,.15)',markets:[{l:'NZ Top Bat',items:ap.filter(p=>p.tb).map(p=>({id:'away_top_bat',n:p.n,o:p.tb}))}]});
+C.push({n:'England Top Bowler',i:'🎯',bg:'rgba(147,51,234,.15)',markets:[{l:'Eng Top Bowler',items:hp.filter(p=>p.tbw).map(p=>({id:'home_top_bowl',n:p.n,o:p.tbw}))}]});
+C.push({n:'NZ Top Bowler',i:'🎯',bg:'rgba(147,51,234,.15)',markets:[{l:'NZ Top Bowler',items:ap.filter(p=>p.tbw).map(p=>({id:'away_top_bowl',n:p.n,o:p.tbw}))}]});
+C.push({n:'Player of the Match',i:'⭐',bg:'rgba(16,185,129,.15)',markets:[{l:'POTM',items:[...hp,...ap].filter(p=>p.pm).map(p=>({id:'potm',n:p.n,o:p.pm}))}]});
+
+// Expanded O/U
+const ouM=[];
+[[' Home Inn Runs',163.5,28,'N',[120,130,140,150,160,170,180,190],'home_inn'],
+[' Away Inn Runs',160.5,28,'N',[120,130,140,150,160,170,180,190],'away_inn'],
+[' Home PP (6ov)',47.5,12,'N',[30,35,40,45,50,55,60],'home_pp'],
+[' Away PP (6ov)',46.5,12,'N',[30,35,40,45,50,55,60],'away_pp'],
+[' Home Fall 1st Wkt',22.5,14,'N',[10,15,20,25,30,35],'fall_wkt'],
+[' Away Fall 1st Wkt',21.5,14,'N',[10,15,20,25,30,35],'fall_wkt'],
+[' Top Batter Total',65.5,18,'N',[40,50,55,60,65,70,75,80,90],'top_bat_total'],
+[' Highest Over',20.5,6,'N',[15,17,19,21,23,25],'high_over'],
+[' Match Sixes',12.5,12.5,'P',[7,8,9,10,11,12,13,14,15,16],'match_sixes'],
+[' Match Fours',22.5,22.5,'P',[15,17,19,21,23,25,27],'match_fours'],
+[' Match Ducks',0.5,.5,'P',[0,1,2,3],'match_ducks'],
+[' Run Outs',0.5,.5,'P',[0,1,2,3],'match_runouts'],
+].forEach(([nm,bl,sd,d,th,g])=>{
+  const it=[];
+  th.forEach(t=>{let p;if(d==='N')p=1-nC(t-.5,bl,sd);else p=t===0?1:1-pC(t-1,bl);const o=tO(p,MARGINS);if(o)it.push({id:g,n:`${t}+`,o,p})});
+  if(it.length)ouM.push({l:`${nm} (O/U ${bl})`,items:it});
+});
+C.push({n:'Expanded O/U Lines',i:'📈',bg:'rgba(34,211,238,.15)',markets:ouM});
+
+// Runs in Over
+const rioItems=[];
+[['Eng Over 1',5.5,1.70,2.05],['Eng Over 2',7.5,1.727,2.00],['Eng Over 3',7.5,1.75,1.95],['Eng Over 4',7.5,1.75,1.95],['Eng Over 5',8.5,1.75,1.95],['Eng Over 6',8.5,1.727,2.00],
+['NZ Over 1',5.5,1.533,2.375],['NZ Over 2',7.5,1.533,2.30],['NZ Over 3',7.5,1.80,1.90]
+].forEach(([nm,ln,ov,un],i)=>{rioItems.push({l:`${nm} (${ln})`,items:[{id:`rio_${i}`,n:`Over ${ln}`,o:ov},{id:`rio_${i}`,n:`Under ${ln}`,o:un}]})});
+C.push({n:'Runs in Over',i:'⏱️',bg:'rgba(139,92,246,.15)',markets:rioItems});
+
+// Wicket in Over
+const wioItems=[];
+[['Eng Ov1',1.20,4.00],['Eng Ov2',1.20,4.00],['Eng Ov3',1.222,3.75],['Eng Ov4',1.25,3.60],['Eng Ov5',1.25,3.60],['Eng Ov6',1.25,3.60],
+['NZ Ov1',1.20,4.00],['NZ Ov2',1.222,3.75],['NZ Ov3',1.25,3.60],['NZ Ov4',1.25,3.50],['NZ Ov5',1.25,3.50],['NZ Ov6',1.25,3.50]
+].forEach(([nm,no,yes],i)=>{wioItems.push({l:`Wicket ${nm}`,items:[{id:`wio_${i}`,n:'No',o:no},{id:`wio_${i}`,n:'Yes',o:yes}]})});
+C.push({n:'Wicket in Over',i:'🚪',bg:'rgba(251,146,60,.15)',markets:wioItems});
+
+// Dismissal
+C.push({n:'Wicket Method',i:'🔨',bg:'rgba(251,146,60,.15)',markets:[{l:'Next Wicket Method',items:[{id:'wicket_method',n:'Caught',o:1.55},{id:'wicket_method',n:'Bowled',o:4.00},{id:'wicket_method',n:'LBW',o:7.00},{id:'wicket_method',n:'Run Out',o:10.00},{id:'wicket_method',n:'Stumped',o:12.00}]}]});
+
+// Batter Milestones — ALL players with runs lines
+const batM=[];
+[...hp.filter(p=>p.r).map((p,i)=>({...p,t:'h',i})),...ap.filter(p=>p.r).map((p,i)=>({...p,t:'a',i}))].forEach(p=>{
+  const mu=Math.log(p.r),it=[];
+  [10,20,30,50,70].forEach(ms=>{const pr=1-lC(ms,mu,BSIG);const o=tO(pr,MARGINS);if(o)it.push({id:`bat_${p.t}_${p.i}`,n:`${ms}+ runs`,o,p:pr})});
+  if(it.length)batM.push({l:`${p.n} (O/U ${p.r})`,items:it});
+});
+C.push({n:'Batter Runs Milestones',i:'👤',bg:'rgba(236,72,153,.15)',markets:batM});
+
+// Bowler Wickets — ALL bowlers
+const bowM=[];
+[...hp.filter(p=>p.wo).map((p,i)=>({...p,t:'h',i})),...ap.filter(p=>p.wo).map((p,i)=>({...p,t:'a',i}))].forEach(p=>{
+  const lam=(3.7/p.wo+.05)*BMULT,it=[];
+  [1,2,3,4,5].forEach(wk=>{const pr=1-pC(wk-1,lam);const o=tO(pr,MARGINS);if(o)it.push({id:`bowl_${p.t}_${p.i}`,n:`${wk}+ wkts`,o,p:pr})});
+  if(it.length)bowM.push({l:`${p.n} (λ≈${lam.toFixed(2)})`,items:it});
+});
+C.push({n:'Bowler Wickets Milestones',i:'🎳',bg:'rgba(251,146,60,.15)',markets:bowM});
+
+return C;}
+
+const DATA=mkCats();
+
+function uid(it,ml){return`${ml}_${it.n}`}
+function esc(s){return String(s).replace(/'/g,"\\'").replace(/"/g,'&quot;')}
+
+function render(){
+  blk=gB();const c=document.getElementById('mc');let h='';
+  for(const cat of DATA){
+    const op=opn.has(cat.n);
+    h+=`<div class="sec"><div class="sh ${op?'op':''}" onclick="tS('${esc(cat.n)}')">
+    <span class="nm"><span class="ic" style="background:${cat.bg}">${cat.i}</span>${cat.n} <span style="color:var(--t3);font-weight:400;font-size:10px">(${cat.markets.reduce((a,m)=>(m.items||[]).filter(i=>i.o).length+a,0)})</span></span>
+    <span class="cv">▼</span></div><div class="sb ${op?'op':''}">`;
+    for(const mkt of cat.markets){
+      h+=`<div class="sl">${mkt.l}</div>`;
+      for(const it of(mkt.items||[])){
+        if(!it.o)continue;
+        const u=uid(it,mkt.l),iS=sel.some(s=>s.uid===u),iB=blk.has(it.id)&&!iS;
+        h+=`<div class="m ${iS?'sel':''} ${iB?'blk':''}" onclick="${iB?'':`tg('${esc(u)}','${esc(it.id)}','${esc(it.n)}','${esc(mkt.l)}',${it.o})`}">
+        <span>${it.n}</span>
+        <span style="display:flex;align-items:center;gap:4px">
+        ${it.p?`<span class="pb"><span class="f" style="width:${it.p*100}%"></span></span>`:``}
+        ${iB?`<span class="ct">Correlated</span>`:`<span class="od">${it.o.toFixed(2)}</span>`}
+        </span></div>`;
+      }
+    }
+    h+=`</div></div>`;
+  }
+  c.innerHTML=h;rS();
+}
+
+function rS(){
+  const b=document.getElementById('sb'),w=document.getElementById('wa');
+  document.getElementById('cn').textContent=sel.length;document.getElementById('lc').textContent=sel.length;
+  if(!sel.length){b.innerHTML=`<div class="empty"><p style="font-size:28px;opacity:.3;margin-bottom:8px">🏏</p><p>Add selections to build your bet.<br>Correlated markets auto-block.</p></div>`;w.innerHTML='';document.getElementById('pb').disabled=!0;document.getElementById('pb').textContent='Add selections';uR();return}
+  b.innerHTML=sel.map(s=>`<div class="si"><button class="rm" onclick="rm('${esc(s.uid)}')">✕</button><div class="mn">${s.ml}</div><div class="sn">${s.name}</div><div class="so">${s.o.toFixed(2)}</div></div>`).join('');
+  const bc=blk.size;w.innerHTML=bc?`<div class="wn">⚠️ ${bc} market${bc>1?'s':''} blocked</div>`:'';
+  document.getElementById('pb').disabled=sel.length<2;document.getElementById('pb').textContent=sel.length<2?'Add at least 2 legs':`Place Bet — ${sel.length} Legs`;uR();
+}
+
+function uR(){
+  const st=parseFloat((document.getElementById('si')||{}).value?.replace(/[^0-9.]/g,'')||'0');
+  if(!sel.length){document.getElementById('co').textContent='—';document.getElementById('rt').textContent='£0.00';return}
+  const cm=sel.reduce((a,s)=>a*s.o,1);
+  document.getElementById('co').textContent=cm.toFixed(2);document.getElementById('rt').textContent=`£${(st*cm).toFixed(2)}`;
+}
+
+function tS(n){opn.has(n)?opn.delete(n):opn.add(n);render()}
+function tg(u,mid,name,ml,o){
+  const i=sel.findIndex(s=>s.uid===u);
+  if(i>=0)sel.splice(i,1);
+  else{sel=sel.filter(s=>s.ml!==ml);sel.push({uid:u,mid,name,ml,o});toast(`Added: ${name}`)}
+  render();
+}
+function rm(u){sel=sel.filter(s=>s.uid!==u);render()}
+function clr(){sel=[];render()}
+function toast(m){const t=document.getElementById('ts');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+
+render();
+</script>
+</body>
+</html>
